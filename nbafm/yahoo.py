@@ -25,8 +25,11 @@ STAT_NAMES = {"PTS": "PTS", "REB": "REB", "AST": "AST", "ST": "STL", "BLK": "BLK
 def _secret(name):
     if os.environ.get(name):
         return os.environ[name]
-    r = subprocess.run(["security", "find-generic-password", "-s", KEYCHAIN[name], "-w"],
-                       capture_output=True, text=True)
+    try:
+        r = subprocess.run(["security", "find-generic-password", "-s", KEYCHAIN[name], "-w"],
+                           capture_output=True, text=True)
+    except FileNotFoundError:  # not macOS (e.g. GitHub Actions without the secrets set)
+        return None
     return r.stdout.strip() or None
 
 
