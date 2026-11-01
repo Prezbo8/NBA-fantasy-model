@@ -42,11 +42,13 @@ def teams():
     return {t["team"]["id"]: t["team"]["abbreviation"] for t in league["teams"]}
 
 
-def schedule(team_ids):
-    """Every regular-season game: [{id, date (UTC ISO), home, away, completed}], deduped."""
+def schedule(team_ids, season=None):
+    """Every regular-season game: [{id, date (UTC ISO), home, away, completed}], deduped.
+    season = ESPN season year (the year it ends, e.g. 2025 for 2024-25); None = current."""
     games = {}
+    params = {"seasontype": 2, **({"season": season} if season else {})}
     for tid in team_ids:
-        for e in _get(f"teams/{tid}/schedule", seasontype=2)["events"]:
+        for e in _get(f"teams/{tid}/schedule", **params)["events"]:
             c = e["competitions"][0]
             side = {x["homeAway"]: x["team"]["abbreviation"] for x in c["competitors"]}
             games[e["id"]] = {"id": e["id"], "date": e["date"], "home": side["home"],
@@ -54,9 +56,9 @@ def schedule(team_ids):
     return sorted(games.values(), key=lambda g: g["date"])
 
 
-def box_score(game):
+def box_score(game, cache_dir=GAMES_DIR):
     """Player lines for a finished game, cached on disk. [{pid, name, pos, team, MIN, PTS, ...}]"""
-    path = GAMES_DIR / f"{game['id']}.json"
+    path = cache_dir / f"{game['id']}.json"
     if path.exists():
         return json.loads(path.read_text())
     lines = []
