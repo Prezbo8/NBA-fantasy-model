@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NBA Fantasy Model</title>
+<style>
+  :root {
+    --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+    --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10); --accent: #2a78d6;
+    --good: #006300; --bad: #d03b3b;
+    --s1: #cde2fb; --s2: #86b6ef; --s3: #3987e5; --s4: #1c5cab;
+    --out: #d03b3b; --dtd: #fab219;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10); --accent: #3987e5;
+      --good: #0ca30c; --bad: #ec835a;
+      --s1: #104281; --s2: #1c5cab; --s3: #3987e5; --s4: #86b6ef;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background: var(--page); color: var(--ink); }
+  header { padding: 16px 20px 0; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--ink-2); font-size: 13px; }
+  .banner { margin: 10px 0 0; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);
+            background: var(--surface); color: var(--ink-2); font-size: 13px; }
+  nav { display: flex; gap: 4px; padding: 12px 20px 0; border-bottom: 1px solid var(--grid); overflow-x: auto; }
+  nav button { background: none; border: 0; padding: 8px 12px; font: inherit; color: var(--ink-2);
+               border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; }
+  nav button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+  main { padding: 16px 20px 40px; }
+  section { display: none; } section.on { display: block; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+  input, select { font: inherit; padding: 5px 8px; border: 1px solid var(--axis); border-radius: 6px;
+                  background: var(--surface); color: var(--ink); }
+  label { color: var(--ink-2); font-size: 13px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--grid); }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; cursor: pointer; user-select: none;
+       position: sticky; top: 0; background: var(--surface); }
+  th.sorted { color: var(--ink); }
+  td.l, th.l { text-align: left; }
+  tr:hover td { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+  .up { color: var(--good); } .down { color: var(--bad); }
+  .badge { display: inline-block; padding: 0 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .badge.Out { background: var(--out); color: #fff; }
+  .badge.dtd { background: var(--dtd); color: #0b0b0b; }
+  .note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+  /* schedule grid */
+  .sched { width: auto; }
+  .sched td.g { padding: 0; width: 34px; }
+  .sched td.g span { display: block; margin: 2px; height: 22px; border-radius: 4px; }
+  .sched td.g.play span { background: var(--s3); }
+  .sched tr.counts td { font-weight: 600; }
+  .sched th.today, .sched td.today { box-shadow: inset 2px 0 0 var(--accent); }
+  .lvl0 { color: var(--muted); } .light { color: var(--accent); }
+  .sched .week2 { border-left: 2px solid var(--axis); }
+  /* trade */
+  .sides { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .sides { grid-template-columns: 1fr; } }
+  .side { padding: 12px; }
+  .side h3 { margin: 0 0 8px; font-size: 15px; }
+  .chips { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .chip { display: flex; justify-content: space-between; gap: 8px; padding: 4px 8px; border-radius: 6px;
+          border: 1px solid var(--grid); }
+  .chip button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 14px; }
+  .verdict { margin-top: 16px; padding: 12px; }
+  .big { font-size: 22px; font-weight: 600; }
+  .todo { padding: 20px; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<header>
+  <h1>NBA Fantasy Model</h1>
+  <div class="sub" id="meta">Loading…</div>
+  <div class="banner" id="yahooBanner" hidden></div>
+</header>
+<nav id="tabs">
+  <button data-tab="rankings" class="on">Rankings</button>
+  <button data-tab="schedule">Schedule</button>
+  <button data-tab="streamers">Streamers</button>
+  <button data-tab="trade">Trade</button>
+  <button data-tab="waivers">Waivers</button>
+  <button data-tab="matchup">Matchup</button>
+  <button data-tab="drop">Drop / Hold</button>
+</nav>
+<main>
+  <section id="rankings" class="on">
+    <div class="controls">
+      <input id="rkSearch" placeholder="Search player or team">
+      <select id="rkPos"><option value="">All positions</option><option>G</option><option>F</option><option>C</option></select>
+      <label><input type="checkbox" id="rkHideOut"> Hide players ruled out</label>
+      <label>Min GP <input type="number" id="rkMinGp" value="1" min="0" style="width:60px"></label>
+    </div>
+    <div class="card"><table id="rkTable"></table></div>
+    <div class="note">Proj = blend of season / last 14 days / last 7 days FP per game (50/30/20), nudged toward replacement level for tiny samples.
+      VORP = proj − replacement level. Week / next week / ROS = proj × games the player is available for.</div>
+  </section>
+
+  <section id="schedule">
+    <div class="card"><table class="sched" id="schedTable"></table></div>
+    <div class="note">Blue = team plays that day. Day totals in <span class="light">blue</span> are light nights (≤ 6 games) — the best days to stream, because fewer of your opponents' players are active and your bench can fill open slots.</div>
+  </section>
+
+  <section id="streamers">
+    <div class="controls" id="stDays"></div>
+    <div class="controls">
+      <label>Skip top <input type="number" id="stSkip" value="150" min="0" style="width:70px"> players (likely rostered)</label>
+      <label><input type="checkbox" id="stHideOut" checked> Hide players ruled out</label>
+    </div>
+    <div class="card"><table id="stTable"></table></div>
+    <div class="note">Pick the days you have an open lineup slot. Ranked by projected FP on those days only.
+      “Skip top N” stands in for a free-agent list until the Yahoo connection works.</div>
+  </section>
+
+  <section id="trade">
+    <datalist id="playerList"></datalist>
+    <div class="sides">
+      <div class="card side"><h3>You give</h3><input list="playerList" id="tdGiveIn" placeholder="Add player"><div class="chips" id="tdGive"></div></div>
+      <div class="card side"><h3>You get</h3><input list="playerList" id="tdGetIn" placeholder="Add player"><div class="chips" id="tdGet"></div></div>
+    </div>
+    <div class="card verdict" id="tdVerdict"></div>
+  </section>
+
+  <section id="waivers"><div class="card todo">Needs the Yahoo connection (rosters + free agents). Until then, use <b>Streamers</b> with “Skip top N” as a stand-in.</div></section>
+  <section id="matchup"><div class="card todo">Needs the Yahoo connection (your roster + this week’s opponent).</div></section>
+  <section id="drop"><div class="card todo">Needs the Yahoo connection (your roster). Until then, find your players in <b>Rankings</b>: anyone with negative VORP is below replacement level and droppable.</div></section>
+</main>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const fmt = (v, d = 1) => v == null ? "–" : Number(v).toFixed(d);
+const dayLabel = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "numeric", day: "numeric" });
+const injBadge = (p) => !p.inj ? "" : `<span class="badge ${p.inj === "Out" ? "Out" : "dtd"}" title="${(p.inj_note || "").replace(/"/g, "&quot;")}">${p.inj === "Out" ? "OUT" : p.inj.toUpperCase()}</span>`;
+const posMatch = (p, pos) => !pos || p.pos.includes(pos);
+let D;
+
+// Generic sortable table: cols = [{k, label, l?, d?, fmt?}]
+function table(el, cols, rows, state, rerender) {
+  const head = cols.map(c => `<th class="${c.l ? "l" : ""} ${state.sort === c.k ? "sorted" : ""}" data-k="${c.k}">${c.label}${state.sort === c.k ? (state.asc ? " ▲" : " ▼") : ""}</th>`).join("");
+  const sorted = [...rows].sort((a, b) => {
+    const x = a[state.sort], y = b[state.sort];
+    const r = typeof x === "string" ? x.localeCompare(y) : (x ?? -1e9) - (y ?? -1e9);
+    return state.asc ? r : -r;
+  });
+  const body = sorted.map((r, i) => "<tr>" + cols.map(c => `<td class="${c.l ? "l" : ""}">${c.fmt ? c.fmt(r, i) : fmt(r[c.k], c.d ?? 1)}</td>`).join("") + "</tr>").join("");
+  el.innerHTML = `<thead><tr>${head}</tr></thead><tbody>${body}</tbody>`;
+  el.querySelectorAll("th").forEach(th => th.onclick = () => {
+    if (!th.dataset.k || th.dataset.k === "rank") return;
+    state.asc = state.sort === th.dataset.k ? !state.asc : false; state.sort = th.dataset.k; rerender();
+  });
+}
+
+const nameCol = { k: "name", label: "Player", l: true, fmt: p => `${p.name} ${injBadge(p)}` };
+const trend = (v) => v == null ? "–" : `<span class="${v > 0.5 ? "up" : v < -0.5 ? "down" : ""}">${v > 0 ? "+" : ""}${v.toFixed(1)}</span>`;
+
+// Rankings
+const rk = { sort: "ros_fp", asc: false };
+function renderRankings() {
+  const q = $("#rkSearch").value.toLowerCase(), pos = $("#rkPos").value, minGp = +$("#rkMinGp").value;
+  const rows = D.players.filter(p => (p.name.toLowerCase().includes(q) || p.team.toLowerCase() === q) && posMatch(p, pos)
+    && p.gp >= minGp && !($("#rkHideOut").checked && p.inj === "Out"));
+  table($("#rkTable"), [
+    { k: "rank", label: "#", fmt: (p, i) => i + 1 }, nameCol,
+    { k: "team", label: "Team", l: true, fmt: p => p.team }, { k: "pos", label: "Pos", l: true, fmt: p => p.pos },
+    { k: "gp", label: "GP", d: 0 }, { k: "min", label: "Min" }, { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) },
+    { k: "fp_season", label: "FP/G" }, { k: "fp_l14", label: "L14" }, { k: "fp_l7", label: "L7" },
+    { k: "proj", label: "Proj" }, { k: "vorp", label: "VORP", fmt: p => trend(p.vorp) },
+    { k: "wk_games", label: "Wk G", d: 0 }, { k: "wk_fp", label: "Wk FP", d: 0 },
+    { k: "nw_games", label: "Next G", d: 0 }, { k: "nw_fp", label: "Next FP", d: 0 },
+    { k: "ros_fp", label: "ROS FP", d: 0 },
+  ], rows, rk, renderRankings);
+}
+
+// Schedule grid
+function renderSchedule() {
+  const teams = Object.fromEntries(Object.entries(D.team_days).map(([t, ds]) => [t, new Set(ds)]));
+  const days = D.horizon.filter(d => d >= D.today);
+  const wkEnd = D.week[1];
+  const teamRows = Object.keys(teams).sort().map(t => ({ t, days: teams[t],
+    wk: days.filter(d => d <= wkEnd && teams[t].has(d)).length, nw: days.filter(d => d > wkEnd && teams[t].has(d)).length }))
+    .sort((a, b) => (b.wk + b.nw) - (a.wk + a.nw) || a.t.localeCompare(b.t));
+  const cls = (d, i) => `${d === D.today ? "today" : ""} ${d > wkEnd && (i === 0 || days[i - 1] <= wkEnd) ? "week2" : ""}`;
+  let h = `<thead><tr><th class="l">Team</th>${days.map((d, i) => `<th class="${cls(d, i)}">${dayLabel(d)}</th>`).join("")}<th>This wk</th><th>Next wk</th></tr></thead><tbody>`;
+  h += `<tr class="counts"><td class="l">Games</td>${days.map((d, i) => { const n = D.games_by_day[d]; return `<td class="${cls(d, i)} ${n === 0 ? "lvl0" : n <= 6 ? "light" : ""}">${n}</td>`; }).join("")}<td></td><td></td></tr>`;
+  h += teamRows.map(r => `<tr><td class="l">${r.t}</td>${days.map((d, i) => `<td class="g ${r.days.has(d) ? "play" : ""} ${cls(d, i)}" title="${r.t} ${dayLabel(d)}"><span></span></td>`).join("")}<td>${r.wk}</td><td>${r.nw}</td></tr>`).join("");
+  $("#schedTable").innerHTML = h + "</tbody>";
+}
+
+// Streamers
+const st = { sort: "st_fp", asc: false };
+function renderStreamers() {
+  const chosen = [...document.querySelectorAll("#stDays input:checked")].map(c => c.value);
+  const skip = +$("#stSkip").value;
+  const byRos = [...D.players].sort((a, b) => b.ros_fp - a.ros_fp);
+  const rostered = new Set(byRos.slice(0, skip).map(p => p.id));
+  const rows = D.players.filter(p => !rostered.has(p.id) && !($("#stHideOut").checked && p.inj === "Out"))
+    .map(p => { const g = p.days.filter(d => chosen.includes(d)).length; return { ...p, st_g: g, st_fp: g * p.proj, st_days: p.days.filter(d => chosen.includes(d)).map(dayLabel).join(", ") }; })
+    .filter(p => p.st_g > 0).slice(0, 2000);
+  table($("#stTable"), [
+    nameCol, { k: "team", label: "Team", l: true, fmt: p => p.team }, { k: "pos", label: "Pos", l: true, fmt: p => p.pos },
+    { k: "proj", label: "Proj" }, { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) },
+    { k: "st_g", label: "G", d: 0 }, { k: "st_fp", label: "FP on days" }, { k: "st_days", label: "Plays", l: true, fmt: p => p.st_days },
+  ], rows.sort((a, b) => b.st_fp - a.st_fp).slice(0, 100), st, renderStreamers);
+}
+
+// Trade
+const td = { give: [], get: [] };
+function renderTrade() {
+  for (const side of ["give", "get"]) {
+    $(`#td${side === "give" ? "Give" : "Get"}`).innerHTML = td[side].map((p, i) =>
+      `<div class="chip"><span>${p.name} ${injBadge(p)} <span class="sub">${p.team} · ${fmt(p.proj)} proj · ${fmt(p.ros_fp, 0)} ROS</span></span><button data-side="${side}" data-i="${i}" aria-label="Remove">×</button></div>`).join("");
+  }
+  document.querySelectorAll(".chip button").forEach(b => b.onclick = () => { td[b.dataset.side].splice(+b.dataset.i, 1); renderTrade(); });
+  const sum = (arr, k) => arr.reduce((s, p) => s + p[k], 0);
+  if (!td.give.length && !td.get.length) { $("#tdVerdict").innerHTML = '<span class="sub">Add players to both sides.</span>'; return; }
+  // Roster-spot adjustment: the side receiving fewer players frees spots, filled by replacement-level pickups.
+  const ros = [...D.players].map(p => p.ros_games).sort((a, b) => a - b), medRos = ros[Math.floor(ros.length / 2)];
+  const spots = td.give.length - td.get.length;  // >0: you free spots
+  const fill = spots * D.replacement_fp * medRos;
+  const rosDiff = sum(td.get, "ros_fp") - sum(td.give, "ros_fp") + fill;
+  const nwDiff = sum(td.get, "nw_fp") - sum(td.give, "nw_fp");
+  const sign = (v) => `<span class="${v >= 0 ? "up" : "down"}">${v >= 0 ? "+" : ""}${v.toFixed(0)}</span>`;
+  $("#tdVerdict").innerHTML = `
+    <div class="sub">Rest-of-season FP change for you</div>
+    <div class="big">${sign(rosDiff)} <span class="sub">(${rosDiff >= 0 ? "accept" : "decline"} on ROS value)</span></div>
+    <div class="sub" style="margin-top:6px">Next week: ${sign(nwDiff)} FP · ROS: get ${fmt(sum(td.get, "ros_fp"), 0)} vs give ${fmt(sum(td.give, "ros_fp"), 0)}
+    ${spots ? ` · roster spots: ${spots > 0 ? "+" : ""}${spots} × replacement (${fmt(D.replacement_fp)} FP/G × ${medRos} G) = ${sign(fill)}` : ""}</div>`;
+}
+function addTrade(side, input) {
+  const p = D.players.find(p => `${p.name} (${p.team})` === input.value);
+  if (p && !td.give.concat(td.get).includes(p)) { td[side].push(p); input.value = ""; renderTrade(); }
+}
+
+fetch("data.json").then(r => r.json()).then(data => {
+  D = data;
+  const sc = Object.entries(D.scoring).map(([k, v]) => `${k} ${v}`).join(" · ");
+  $("#meta").textContent = `Updated ${D.updated} · Scoring: ${sc} · Replacement level ${fmt(D.replacement_fp)} FP/G`;
+  if (!D.yahoo) { const b = $("#yahooBanner"); b.hidden = false;
+    b.textContent = "Yahoo not connected yet: using Yahoo's default points scoring and no rosters. Waivers, Matchup and Drop tabs turn on once it connects."; }
+  $("#playerList").innerHTML = D.players.map(p => `<option value="${p.name} (${p.team})">`).join("");
+  const future = D.horizon.filter(d => d >= D.today);
+  $("#stDays").innerHTML = "<label>Days:</label>" + future.map(d => `<label><input type="checkbox" value="${d}" ${d > D.today && D.games_by_day[d] > 0 && D.games_by_day[d] <= 6 ? "checked" : ""}> ${dayLabel(d)} <span class="sub">(${D.games_by_day[d]})</span></label>`).join("");
+  ["#rkSearch", "#rkPos", "#rkHideOut", "#rkMinGp"].forEach(s => $(s).oninput = renderRankings);
+  ["#stSkip", "#stHideOut"].forEach(s => $(s).oninput = renderStreamers);
+  $("#stDays").onchange = renderStreamers;
+  $("#tdGiveIn").onchange = (e) => addTrade("give", e.target);
+  $("#tdGetIn").onchange = (e) => addTrade("get", e.target);
+  document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => {
+    document.querySelectorAll("#tabs button, main section").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); $("#" + b.dataset.tab).classList.add("on");
+  });
+  renderRankings(); renderSchedule(); renderStreamers(); renderTrade();
+});
+</script>
+</body>
+</html>
