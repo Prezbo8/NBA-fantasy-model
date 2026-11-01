@@ -106,6 +106,7 @@ def build(schedule, box_scores, injuries, scoring, today, replacement_rank):
             "nw_games": sum(1 for d in dates if week_end < d <= horizon[-1]),
             "ros_games": len(dates),
             "days": [d.isoformat() for d in dates if d <= horizon[-1]],
+            "_dates": dates,  # full season, for power_rankings; removed before writing JSON
         })
         p["wk_fp"] = round(proj * p["wk_games"], 1)
         p["nw_fp"] = round(proj * p["nw_games"], 1)
@@ -123,3 +124,28 @@ def build(schedule, box_scores, injuries, scoring, today, replacement_rank):
         "replacement_fp": round(repl, 2),
         "players": players,
     }
+
+
+def power_rankings(league, players, next_week, today):
+    """Rank fantasy teams by roster alone: simulate every remaining day, each team scoring
+    its 10 best projected players with a game (10 active slots), injured players skipped."""
+    by_id = {p["id"]: p for p in players}
+    # Same denominator for every team: full weeks left, from tomorrow (today may be half played)
+    tomorrow = today + timedelta(days=1)
+    season = {d for p in players for d in p["_dates"] if d >= tomorrow}
+    weeks = len({d - timedelta(days=d.weekday()) for d in season})
+    out = []
+    for t in league["teams"]:
+        ps = [by_id[i] for i in t["players"]]
+        days = sorted({d for p in ps for d in p["_dates"] if d >= tomorrow})
+        daily = {d: sum(sorted((p["proj"] for p in ps if d in p["_dates"]), reverse=True)[:10]) for d in days}
+        out.append({
+            "id": t["id"], "name": t["name"],
+            "ros_wk": round(sum(daily.values()) / weeks),
+            "next_wk": round(sum(v for d, v in daily.items() if d.isoformat() in next_week)),
+            "healthy": round(sum(sorted((p["proj"] for p in ps), reverse=True)[:10]), 1),
+            "stars": [[p["name"], round(p["proj"])] for p in sorted(ps, key=lambda p: -p["proj"])[:3]],
+            "out": [p["name"] for p in ps if p["inj"] == "Out"],
+            "unmatched": t["unmatched"],
+        })
+    return sorted(out, key=lambda t: -t["ros_wk"])

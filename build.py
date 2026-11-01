@@ -24,6 +24,10 @@ def main():
     data = model.build(schedule, box, injuries, scoring, today, repl_rank)
     data["yahoo"] = lg is not None
     data["league"] = rosters.load(data["players"])
+    if data["league"]:
+        data["league"]["power"] = model.power_rankings(data["league"], data["players"], data["horizon"][7:], today)
+    for p in data["players"]:
+        del p["_dates"]
     OUT.write_text(json.dumps(data, separators=(",", ":")))
     print(f"wrote {OUT} ({len(data['players'])} players, scoring={'yahoo' if lg else 'config'})")
 

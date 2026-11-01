@@ -88,6 +88,7 @@
   <button data-tab="waivers">Waivers</button>
   <button data-tab="matchup">Matchup</button>
   <button data-tab="drop">Drop / Hold</button>
+  <button data-tab="league">League</button>
 </nav>
 <main>
   <section id="rankings" class="on">
@@ -147,6 +148,13 @@
       On heavy days your lowest players sit on the bench and don't score.</div>
   </section>
 
+  <section id="league">
+    <div class="card"><table id="lgTable"></table></div>
+    <div class="note">Roster strength only, not the standings. <b>Avg/week</b> simulates every remaining day with each team's 10 best projected players who have a game, skipping injured players until their return date (main ranking).
+      <b>Next week</b> = the same for next Mon–Sun. <b>Talent</b> = sum of the 10 best per-game projections with everyone healthy.
+      Players with no games yet this season count as 0 (listed under Not counted). This early, gaps of a few % are noise.</div>
+  </section>
+
   <section id="drop">
     <div class="card"><table id="drTable"></table></div>
     <div class="note">“Best FA” = the highest-projected free agent at a position this player is eligible for. Drop candidate = a free agent beats him by 2+ FP per game.
@@ -166,7 +174,8 @@ let D;
 function table(el, cols, rows, state, rerender) {
   const head = cols.map(c => `<th class="${c.l ? "l" : ""} ${state.sort === c.k ? "sorted" : ""}" data-k="${c.k}">${c.label}${state.sort === c.k ? (state.asc ? " ▲" : " ▼") : ""}</th>`).join("");
   const sorted = [...rows].sort((a, b) => {
-    const x = a[state.sort], y = b[state.sort];
+    const v = (r) => Array.isArray(r[state.sort]) ? r[state.sort].length : r[state.sort];  // list columns sort by count
+    const x = v(a), y = v(b);
     const r = typeof x === "string" ? x.localeCompare(y) : (x ?? -1e9) - (y ?? -1e9);
     return state.asc ? r : -r;
   });
@@ -286,6 +295,22 @@ function renderMatchup() {
     <tbody>${body}<tr><td class="l"><b>Total</b></td><td></td><td><b>${fmt(tm)}</b></td><td></td><td><b>${fmt(to)}</b></td><td><b>${trend(tm - to)}</b></td></tr></tbody>`;
 }
 
+// League power rankings (computed in model.power_rankings)
+const lg = { sort: "ros_wk", asc: false };
+function renderLeague() {
+  const P = D.league.power, best = (k) => Math.max(...P.map(t => t[k]));
+  const mark = (t, k) => t[k] === best(k) ? `<b>${t[k].toLocaleString()}</b>` : t[k].toLocaleString();
+  table($("#lgTable"), [
+    { k: "rank", label: "#", fmt: (t, i) => i + 1 },
+    { k: "name", label: "Team", l: true, fmt: t => t.id === D.league.my_team ? `<b>${t.name}</b> <span class="sub">(you)</span>` : t.name },
+    { k: "ros_wk", label: "Avg/week", fmt: t => mark(t, "ros_wk") }, { k: "next_wk", label: "Next week", fmt: t => mark(t, "next_wk") },
+    { k: "healthy", label: "Talent", fmt: t => mark(t, "healthy") },
+    { k: "stars", label: "Top 3", l: true, fmt: t => t.stars.map(([n, v]) => `${n} <span class="sub">${v}</span>`).join(", ") },
+    { k: "out", label: "Out now", l: true, fmt: t => t.out.length ? `<span class="down">${t.out.length}</span> <span class="sub">${t.out.join(", ")}</span>` : "–" },
+    { k: "unmatched", label: "Not counted", l: true, fmt: t => t.unmatched.length ? `<span class="sub">${t.unmatched.join(", ")}</span>` : "–" },
+  ], P, lg, renderLeague);
+}
+
 // Trade
 const td = { give: [], get: [] };
 function renderTrade() {
@@ -337,7 +362,7 @@ fetch("data.json").then(r => r.json()).then(data => {
     document.querySelectorAll("#tabs button, main section").forEach(x => x.classList.remove("on"));
     b.classList.add("on"); $("#" + b.dataset.tab).classList.add("on");
   });
-  renderRankings(); renderSchedule(); renderStreamers(); renderTrade(); renderWaivers(); renderDrop(); renderMatchup();
+  renderRankings(); renderSchedule(); renderStreamers(); renderTrade(); renderWaivers(); renderDrop(); renderMatchup(); renderLeague();
 });
 </script>
 </body>
