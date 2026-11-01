@@ -78,6 +78,7 @@
 <header>
   <h1>NBA Fantasy Model</h1>
   <div class="sub" id="meta">Loading…</div>
+  <div class="sub" id="adds" style="margin-top:4px"></div>
   <div class="banner" id="yahooBanner" hidden></div>
 </header>
 <nav id="tabs">
@@ -109,6 +110,7 @@
   </section>
 
   <section id="streamers">
+    <div class="banner" id="stAddsWarn" hidden style="margin:0 0 12px"></div>
     <div class="controls" id="stDays"></div>
     <div class="controls">
       <label><input type="checkbox" id="stFaOnly" checked> Free agents only</label>
@@ -243,6 +245,22 @@ function renderStreamers() {
   ], rows.sort((a, b) => b.st_fp - a.st_fp).slice(0, 100), st, renderStreamers);
 }
 
+// Adds left this week. The count is read during a roster refresh; if a new fantasy week
+// has started since, Yahoo has reset it to 0.
+function renderAdds() {
+  const a = D.league.adds;
+  if (!a) return;
+  const fresh = a.week_of === D.week[0], used = fresh ? a.used : 0, left = a.max - used;
+  const icon = left === 0 ? "⛔" : left <= 2 ? "⚠️" : "✓";
+  $("#adds").innerHTML = `${icon} <b>Adds this week: ${used}/${a.max}</b> — ${left === 0 ? "none left" : `${left} left`}`
+    + (fresh ? ` <span class="sub">(as of ${D.league.as_of})</span>` : ` <span class="sub">(new week, so reset; refresh rosters to confirm)</span>`);
+  const w = $("#stAddsWarn");
+  w.hidden = left > 2;
+  w.textContent = left === 0
+    ? `⛔ No adds left this week (${used}/${a.max}). Streams resume ${dayLabel(D.horizon[7])}.`
+    : `⚠️ Only ${left} add${left > 1 ? "s" : ""} left this week. Keep one for an injury replacement.`;
+}
+
 // Waivers
 const wv = { sort: "gain", asc: false };
 function renderWaivers() {
@@ -362,7 +380,7 @@ fetch("data.json").then(r => r.json()).then(data => {
     document.querySelectorAll("#tabs button, main section").forEach(x => x.classList.remove("on"));
     b.classList.add("on"); $("#" + b.dataset.tab).classList.add("on");
   });
-  renderRankings(); renderSchedule(); renderStreamers(); renderTrade(); renderWaivers(); renderDrop(); renderMatchup(); renderLeague();
+  renderRankings(); renderSchedule(); renderStreamers(); renderTrade(); renderWaivers(); renderDrop(); renderMatchup(); renderLeague(); renderAdds();
 });
 </script>
 </body>

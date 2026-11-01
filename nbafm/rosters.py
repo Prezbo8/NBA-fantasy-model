@@ -2,6 +2,8 @@
 
 data/rosters.json is a snapshot read from the Yahoo league pages in the browser (the API
 still returns 403). Refresh it whenever rosters change; it goes stale otherwise.
+"adds" comes from the line "You have used N of your 7 player adds for this week" on the
+user's team page (/nba/108458/4); week_of = Monday of the week it was read.
 """
 import json
 import re
@@ -50,4 +52,4 @@ def load(players):
         if unmatched:
             print(f"rosters: {t['name']}: no ESPN match for {unmatched}")
         teams.append({"id": t["id"], "name": t["name"], "players": ids, "unmatched": unmatched})
-    return {"as_of": snap["as_of"], "my_team": snap["my_team"], "teams": teams}
+    return {"as_of": snap["as_of"], "my_team": snap["my_team"], "teams": teams, "adds": snap.get("adds")}
