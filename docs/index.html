@@ -110,12 +110,12 @@
   <section id="streamers">
     <div class="controls" id="stDays"></div>
     <div class="controls">
-      <label>Skip top <input type="number" id="stSkip" value="150" min="0" style="width:70px"> players (likely rostered)</label>
+      <label><input type="checkbox" id="stFaOnly" checked> Free agents only</label>
       <label><input type="checkbox" id="stHideOut" checked> Hide players ruled out</label>
     </div>
     <div class="card"><table id="stTable"></table></div>
     <div class="note">Pick the days you have an open lineup slot. Ranked by projected FP on those days only.
-      “Skip top N” stands in for a free-agent list until the Yahoo connection works.</div>
+      Your league allows 7 adds per week, so save streams for light days.</div>
   </section>
 
   <section id="trade">
@@ -127,9 +127,31 @@
     <div class="card verdict" id="tdVerdict"></div>
   </section>
 
-  <section id="waivers"><div class="card todo">Needs the Yahoo connection (rosters + free agents). Until then, use <b>Streamers</b> with “Skip top N” as a stand-in.</div></section>
-  <section id="matchup"><div class="card todo">Needs the Yahoo connection (your roster + this week’s opponent).</div></section>
-  <section id="drop"><div class="card todo">Needs the Yahoo connection (your roster). Until then, find your players in <b>Rankings</b>: anyone with negative VORP is below replacement level and droppable.</div></section>
+  <section id="waivers">
+    <div class="controls">
+      <select id="wvPos"><option value="">All positions</option><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select>
+      <label><input type="checkbox" id="wvHideOut" checked> Hide players ruled out</label>
+    </div>
+    <div class="card"><table id="wvTable"></table></div>
+    <div class="note" id="wvNote"></div>
+  </section>
+
+  <section id="matchup">
+    <div class="controls">
+      <label>Opponent <select id="muOpp"></select></label>
+      <label><input type="radio" name="muWk" value="this"> This week</label>
+      <label><input type="radio" name="muWk" value="next"> Next week</label>
+    </div>
+    <div class="card"><table id="muTable"></table></div>
+    <div class="note">Each day counts the 10 highest-projected players who have a game (10 active slots; position eligibility ignored), skipping anyone ruled out.
+      On heavy days your lowest players sit on the bench and don't score.</div>
+  </section>
+
+  <section id="drop">
+    <div class="card"><table id="drTable"></table></div>
+    <div class="note">“Best FA” = the highest-projected free agent at a position this player is eligible for. Drop candidate = a free agent beats him by 2+ FP per game.
+      Players in IL slots aren't flagged, since they don't use a roster spot.</div>
+  </section>
 </main>
 
 <script>
@@ -156,6 +178,11 @@ function table(el, cols, rows, state, rerender) {
   });
 }
 
+const ownerName = (p) => p.owner == null ? '<span class="sub">FA</span>' : p.owner === D.league.my_team ? "<b>You</b>" : D.league.teams.find(t => t.id === p.owner).name;
+const isFA = (p) => p.owner == null;
+const myPlayers = () => D.players.filter(p => p.owner === D.league.my_team);
+// Yahoo eligibility (PG,SG,...) and ESPN positions (G, F, C, PG...) -> position groups
+const groups = (pos) => new Set(pos.split(",").map(x => x.includes("C") ? "C" : x.includes("G") ? "G" : "F"));
 const nameCol = { k: "name", label: "Player", l: true, fmt: p => `${p.name} ${injBadge(p)}` };
 const trend = (v) => v == null ? "–" : `<span class="${v > 0.5 ? "up" : v < -0.5 ? "down" : ""}">${v > 0 ? "+" : ""}${v.toFixed(1)}</span>`;
 
@@ -168,6 +195,7 @@ function renderRankings() {
   table($("#rkTable"), [
     { k: "rank", label: "#", fmt: (p, i) => i + 1 }, nameCol,
     { k: "team", label: "Team", l: true, fmt: p => p.team }, { k: "pos", label: "Pos", l: true, fmt: p => p.pos },
+    { k: "owner", label: "Owner", l: true, fmt: ownerName },
     { k: "gp", label: "GP", d: 0 }, { k: "min", label: "Min" }, { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) },
     { k: "fp_season", label: "FP/G" }, { k: "fp_l14", label: "L14" }, { k: "fp_l7", label: "L7" },
     { k: "proj", label: "Proj" }, { k: "vorp", label: "VORP", fmt: p => trend(p.vorp) },
@@ -196,10 +224,7 @@ function renderSchedule() {
 const st = { sort: "st_fp", asc: false };
 function renderStreamers() {
   const chosen = [...document.querySelectorAll("#stDays input:checked")].map(c => c.value);
-  const skip = +$("#stSkip").value;
-  const byRos = [...D.players].sort((a, b) => b.ros_fp - a.ros_fp);
-  const rostered = new Set(byRos.slice(0, skip).map(p => p.id));
-  const rows = D.players.filter(p => !rostered.has(p.id) && !($("#stHideOut").checked && p.inj === "Out"))
+  const rows = D.players.filter(p => !($("#stFaOnly").checked && !isFA(p)) && !($("#stHideOut").checked && p.inj === "Out"))
     .map(p => { const g = p.days.filter(d => chosen.includes(d)).length; return { ...p, st_g: g, st_fp: g * p.proj, st_days: p.days.filter(d => chosen.includes(d)).map(dayLabel).join(", ") }; })
     .filter(p => p.st_g > 0).slice(0, 2000);
   table($("#stTable"), [
@@ -207,6 +232,58 @@ function renderStreamers() {
     { k: "proj", label: "Proj" }, { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) },
     { k: "st_g", label: "G", d: 0 }, { k: "st_fp", label: "FP on days" }, { k: "st_days", label: "Plays", l: true, fmt: p => p.st_days },
   ], rows.sort((a, b) => b.st_fp - a.st_fp).slice(0, 100), st, renderStreamers);
+}
+
+// Waivers
+const wv = { sort: "gain", asc: false };
+function renderWaivers() {
+  const active = myPlayers().filter(p => p.slot !== "IL");
+  const worst = active.reduce((a, b) => (a.proj < b.proj ? a : b));
+  const pos = $("#wvPos").value;
+  const rows = D.players.filter(p => isFA(p) && !($("#wvHideOut").checked && p.inj === "Out") && (!pos || groups(p.pos).has(groups(pos).values().next().value)))
+    .map(p => ({ ...p, gain: p.proj - worst.proj })).sort((a, b) => b.gain - a.gain).slice(0, 60);
+  table($("#wvTable"), [
+    nameCol, { k: "team", label: "Team", l: true, fmt: p => p.team }, { k: "pos", label: "Pos", l: true, fmt: p => p.pos },
+    { k: "gp", label: "GP", d: 0 }, { k: "proj", label: "Proj" }, { k: "gain", label: "+FP/G vs drop", fmt: p => trend(p.gain) },
+    { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) }, { k: "fp_l7", label: "L7" },
+    { k: "nw_games", label: "Next G", d: 0 }, { k: "nw_fp", label: "Next FP", d: 0 }, { k: "ros_fp", label: "ROS FP", d: 0 },
+  ], rows, wv, renderWaivers);
+  $("#wvNote").innerHTML = `“+FP/G vs drop” compares each free agent with your lowest-projected active player, <b>${worst.name}</b> (${fmt(worst.proj)} FP/G). Positive = an upgrade per game; multiply by games left for the season-long gain.`;
+}
+
+// Drop / Hold
+const dr = { sort: "proj", asc: true };
+function renderDrop() {
+  const fas = D.players.filter(p => isFA(p) && p.inj !== "Out");
+  const rows = myPlayers().map(p => {
+    const g = groups(p.elig || p.pos);
+    const best = fas.filter(f => [...groups(f.pos)].some(x => g.has(x))).reduce((a, b) => (!a || b.proj > a.proj ? b : a), null);
+    const edge = best ? best.proj - p.proj : null;
+    const verdict = p.slot === "IL" ? "IL" : edge > 2 ? "DROP candidate" : edge > 0 ? "On the bubble" : "Hold";
+    return { ...p, best: best ? best.name : "–", best_proj: best?.proj, edge, verdict };
+  });
+  table($("#drTable"), [
+    { k: "slot", label: "Slot", l: true, fmt: p => p.slot }, nameCol, { k: "elig", label: "Elig", l: true, fmt: p => p.elig },
+    { k: "proj", label: "Proj" }, { k: "vorp", label: "VORP", fmt: p => trend(p.vorp) }, { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) },
+    { k: "nw_games", label: "Next G", d: 0 }, { k: "ros_fp", label: "ROS FP", d: 0 },
+    { k: "best", label: "Best FA", l: true, fmt: p => `${p.best} <span class="sub">${fmt(p.best_proj)}</span>` },
+    { k: "edge", label: "FA edge", fmt: p => p.slot === "IL" ? "–" : trend(p.edge) },
+    { k: "verdict", label: "Verdict", l: true, fmt: p => p.verdict === "DROP candidate" ? `<b class="down">${p.verdict}</b>` : p.verdict },
+  ], rows, dr, renderDrop);
+}
+
+// Matchup: per day, the 10 best projected players with a game count
+function renderMatchup() {
+  const opp = +$("#muOpp").value, next = document.querySelector("input[name=muWk]:checked").value === "next";
+  const days = D.horizon.filter(d => d >= D.today && (next ? d > D.week[1] : d <= D.week[1]));
+  const roster = (id) => D.players.filter(p => p.owner === id);
+  const dayFp = (ps, d) => { const on = ps.filter(p => p.days.includes(d)).sort((a, b) => b.proj - a.proj); return { n: on.length, fp: on.slice(0, 10).reduce((s, p) => s + p.proj, 0) }; };
+  const me = roster(D.league.my_team), them = roster(opp), oppName = D.league.teams.find(t => t.id === opp).name;
+  let tm = 0, to = 0;
+  const body = days.map(d => { const a = dayFp(me, d), b = dayFp(them, d); tm += a.fp; to += b.fp;
+    return `<tr><td class="l">${dayLabel(d)} <span class="sub">(${D.games_by_day[d]} NBA games)</span></td><td>${a.n}</td><td>${fmt(a.fp)}</td><td>${b.n}</td><td>${fmt(b.fp)}</td><td>${trend(a.fp - b.fp)}</td></tr>`; }).join("");
+  $("#muTable").innerHTML = `<thead><tr><th class="l">Day</th><th>You: playing</th><th>You: FP</th><th>${oppName}: playing</th><th>${oppName}: FP</th><th>Edge</th></tr></thead>
+    <tbody>${body}<tr><td class="l"><b>Total</b></td><td></td><td><b>${fmt(tm)}</b></td><td></td><td><b>${fmt(to)}</b></td><td><b>${trend(tm - to)}</b></td></tr></tbody>`;
 }
 
 // Trade
@@ -242,12 +319,17 @@ fetch("data.json").then(r => r.json()).then(data => {
   const sc = Object.entries(D.scoring).map(([k, v]) => `${k} ${v}`).join(" · ");
   $("#meta").textContent = `Updated ${D.updated} · Scoring: ${sc} · Replacement level ${fmt(D.replacement_fp)} FP/G`;
   if (!D.yahoo) { const b = $("#yahooBanner"); b.hidden = false;
-    b.textContent = "Yahoo not connected yet: using Yahoo's default points scoring and no rosters. Waivers, Matchup and Drop tabs turn on once it connects."; }
+    b.textContent = `Rosters as of ${D.league.as_of} (copied from the Yahoo league pages). Yahoo API not connected yet, so roster changes after that date aren't reflected.`; }
+  $("#muOpp").innerHTML = D.league.teams.filter(t => t.id !== D.league.my_team).map(t => `<option value="${t.id}">${t.name}</option>`).join("");
+  document.querySelector(`input[name=muWk][value=${D.today === D.week[1] ? "next" : "this"}]`).checked = true;
+  ["#muOpp"].forEach(s => $(s).onchange = renderMatchup);
+  document.querySelectorAll("input[name=muWk]").forEach(r => r.onchange = renderMatchup);
+  ["#wvPos", "#wvHideOut"].forEach(s => $(s).oninput = renderWaivers);
   $("#playerList").innerHTML = D.players.map(p => `<option value="${p.name} (${p.team})">`).join("");
   const future = D.horizon.filter(d => d >= D.today);
   $("#stDays").innerHTML = "<label>Days:</label>" + future.map(d => `<label><input type="checkbox" value="${d}" ${d > D.today && D.games_by_day[d] > 0 && D.games_by_day[d] <= 6 ? "checked" : ""}> ${dayLabel(d)} <span class="sub">(${D.games_by_day[d]})</span></label>`).join("");
   ["#rkSearch", "#rkPos", "#rkHideOut", "#rkMinGp"].forEach(s => $(s).oninput = renderRankings);
-  ["#stSkip", "#stHideOut"].forEach(s => $(s).oninput = renderStreamers);
+  ["#stFaOnly", "#stHideOut"].forEach(s => $(s).oninput = renderStreamers);
   $("#stDays").onchange = renderStreamers;
   $("#tdGiveIn").onchange = (e) => addTrade("give", e.target);
   $("#tdGetIn").onchange = (e) => addTrade("get", e.target);
@@ -255,7 +337,7 @@ fetch("data.json").then(r => r.json()).then(data => {
     document.querySelectorAll("#tabs button, main section").forEach(x => x.classList.remove("on"));
     b.classList.add("on"); $("#" + b.dataset.tab).classList.add("on");
   });
-  renderRankings(); renderSchedule(); renderStreamers(); renderTrade();
+  renderRankings(); renderSchedule(); renderStreamers(); renderTrade(); renderWaivers(); renderDrop(); renderMatchup();
 });
 </script>
 </body>

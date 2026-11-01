@@ -16,6 +16,8 @@ def et_date(iso):
 
 
 def fantasy_points(line, scoring):
+    tens = sum(line[k] >= 10 for k in ("PTS", "REB", "AST", "STL", "BLK"))
+    line = {**line, "DD": tens >= 2, "TD": tens >= 3}
     return sum(w * line.get(stat, 0) for stat, w in scoring.items())
 
 

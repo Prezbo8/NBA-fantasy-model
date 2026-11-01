@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from nbafm import config, espn, model, yahoo
+from nbafm import config, espn, model, rosters, yahoo
 
 OUT = Path(__file__).resolve().parent / "docs" / "data.json"
 
@@ -23,8 +23,9 @@ def main():
 
     data = model.build(schedule, box, injuries, scoring, today, repl_rank)
     data["yahoo"] = lg is not None
+    data["league"] = rosters.load(data["players"])
     OUT.write_text(json.dumps(data, separators=(",", ":")))
-    print(f"wrote {OUT} ({len(data['players'])} players, scoring={'yahoo' if lg else 'default'})")
+    print(f"wrote {OUT} ({len(data['players'])} players, scoring={'yahoo' if lg else 'config'})")
 
 
 if __name__ == "__main__":

@@ -19,7 +19,7 @@ API = "https://fantasysports.yahooapis.com/fantasy/v2"
 # Yahoo stat display names -> box-score keys in espn.py
 STAT_NAMES = {"PTS": "PTS", "REB": "REB", "AST": "AST", "ST": "STL", "BLK": "BLK", "TO": "TO",
               "OREB": "OREB", "DREB": "DREB", "FGM": "FGM", "FGA": "FGA", "FTM": "FTM",
-              "FTA": "FTA", "3PTM": "3PTM", "3PTA": "3PTA"}
+              "FTA": "FTA", "3PTM": "3PTM", "3PTA": "3PTA", "DD": "DD", "TD": "TD"}
 
 
 def _secret(name):

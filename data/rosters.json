@@ -1,0 +1,1061 @@
+{
+ "source": "yahoo league pages (browser)",
+ "as_of": "2026-11-01",
+ "my_team": 4,
+ "teams": [
+  {
+   "id": 1,
+   "name": "DEMON SZN 😈",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Luka Dončić",
+     "nba": "LAL",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "VJ Edgecombe",
+     "nba": "PHI",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Darryn Peterson",
+     "nba": "UTA",
+     "elig": "SG",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Mikal Bridges",
+     "nba": "NYK",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Naz Reid",
+     "nba": "CHA",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Lauri Markkanen",
+     "nba": "UTA",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Isaiah Hartenstein",
+     "nba": "OKC",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Walker Kessler",
+     "nba": "LAL",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Jamal Murray",
+     "nba": "DEN",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Kyshawn George",
+     "nba": "WAS",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Jrue Holiday",
+     "nba": "POR",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Donovan Clingan",
+     "nba": "POR",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Devin Booker",
+     "nba": "PHX",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "IL",
+     "name": "Jimmy Butler III",
+     "nba": "GSW",
+     "elig": "SF,PF",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Brandon Ingram",
+     "nba": "LAC",
+     "elig": "SG,SF,PF",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "name": "NottaGains",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Austin Reaves",
+     "nba": "LAL",
+     "elig": "PG,SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "Keaton Wagler",
+     "nba": "LAC",
+     "elig": "SG",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Kyrie Irving",
+     "nba": "DAL",
+     "elig": "PG",
+     "status": "Q"
+    },
+    {
+     "slot": "SF",
+     "name": "Ace Bailey",
+     "nba": "UTA",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Jayson Tatum",
+     "nba": "BOS",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Bam Adebayo",
+     "nba": "MIA",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Jabari Smith Jr.",
+     "nba": "HOU",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Moussa Diabaté",
+     "nba": "CHA",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Terrence Shannon Jr.",
+     "nba": "MIN",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Michael Porter Jr.",
+     "nba": "BKN",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Donovan Mitchell",
+     "nba": "CLE",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Jeremiah Fears",
+     "nba": "NOP",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Davion Mitchell",
+     "nba": "MIA",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "IL",
+     "name": "Jaren Jackson Jr.",
+     "nba": "UTA",
+     "elig": "PF,C",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "name": "New York ROCKETS",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Stephon Castle",
+     "nba": "SAS",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "CJ McCollum",
+     "nba": "ATL",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Anthony Black",
+     "nba": "ORL",
+     "elig": "PG,SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Jaden McDaniels",
+     "nba": "MIN",
+     "elig": "SF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "RJ Barrett",
+     "nba": "TOR",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Dillon Brooks",
+     "nba": "PHX",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Onyeka Okongwu",
+     "nba": "ATL",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Pascal Siakam",
+     "nba": "IND",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Josh Giddey",
+     "nba": "CHI",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Miles Bridges",
+     "nba": "PHX",
+     "elig": "PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Giannis Antetokounmpo",
+     "nba": "MIA",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Jalen Brunson",
+     "nba": "NYK",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Josh Hart",
+     "nba": "NYK",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "IL",
+     "name": "Jalen Duren",
+     "nba": "DET",
+     "elig": "C",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "name": "STAYWINNING",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Payton Pritchard",
+     "nba": "BOS",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "N. Alexander-Walker",
+     "nba": "ATL",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Tyrese Maxey",
+     "nba": "PHI",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Toumani Camara",
+     "nba": "POR",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Julius Randle",
+     "nba": "BKN",
+     "elig": "PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Peyton Watson",
+     "nba": "CLE",
+     "elig": "SF,PF",
+     "status": "Q"
+    },
+    {
+     "slot": "C",
+     "name": "Alperen Şengün",
+     "nba": "HOU",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Rudy Gobert",
+     "nba": "MIN",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Ajay Mitchell",
+     "nba": "OKC",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Tari Eason",
+     "nba": "HOU",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Jaime Jaquez Jr.",
+     "nba": "MIL",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "De'Aaron Fox",
+     "nba": "SAS",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Anfernee Simons",
+     "nba": "PHI",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "IL",
+     "name": "Anthony Edwards",
+     "nba": "MIN",
+     "elig": "PG,SG",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Paolo Banchero",
+     "nba": "ORL",
+     "elig": "PF",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "name": "EZ 💰",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Brandin Podziemski",
+     "nba": "GSW",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "Trey Murphy III",
+     "nba": "NOP",
+     "elig": "SG,SF",
+     "status": "P"
+    },
+    {
+     "slot": "G",
+     "name": "Shai Gilgeous-Alexander",
+     "nba": "OKC",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Scottie Barnes",
+     "nba": "TOR",
+     "elig": "SF,PF,C",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Brandon Miller",
+     "nba": "CHA",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Matas Buzelis",
+     "nba": "CHI",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Kel'el Ware",
+     "nba": "MIL",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Zion Williamson",
+     "nba": "NOP",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Ryan Rollins",
+     "nba": "MIL",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Kyle Kuzma",
+     "nba": "MIL",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Dejounte Murray",
+     "nba": "NOP",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Jonathan Kuminga",
+     "nba": "MIN",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Trae Young",
+     "nba": "WAS",
+     "elig": "PG",
+     "status": ""
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "name": "Tiniwinnies",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "LaMelo Ball",
+     "nba": "MIN",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "Grayson Allen",
+     "nba": "CHA",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Dylan Harper",
+     "nba": "SAS",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Dyson Daniels",
+     "nba": "ATL",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Caleb Wilson",
+     "nba": "CHI",
+     "elig": "PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "OG Anunoby",
+     "nba": "NYK",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Nikola Jokić",
+     "nba": "DEN",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "P.J. Washington",
+     "nba": "DAL",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Yaxel Lendeborg",
+     "nba": "GSW",
+     "elig": "PF",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Darius Garland",
+     "nba": "LAC",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Daniss Jenkins",
+     "nba": "DET",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Draymond Green",
+     "nba": "GSW",
+     "elig": "PF,C",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Alex Caruso",
+     "nba": "OKC",
+     "elig": "SG,SF",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Kawhi Leonard",
+     "nba": "TOR",
+     "elig": "SG,SF,PF",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Jalen Williams",
+     "nba": "OKC",
+     "elig": "SF,PF",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "name": "GRAGRABOOMFLASH",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Tyrese Haliburton",
+     "nba": "IND",
+     "elig": "PG,SG",
+     "status": "O"
+    },
+    {
+     "slot": "G",
+     "name": "Deni Avdija",
+     "nba": "POR",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Ausar Thompson",
+     "nba": "DET",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Karl-Anthony Towns",
+     "nba": "NYK",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Anthony Davis",
+     "nba": "WAS",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Alex Sarr",
+     "nba": "WAS",
+     "elig": "C",
+     "status": "Q"
+    },
+    {
+     "slot": "Util",
+     "name": "Immanuel Quickley",
+     "nba": "TOR",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "John Collins",
+     "nba": "DET",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Fred VanVleet",
+     "nba": "HOU",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Kon Knueppel",
+     "nba": "CHA",
+     "elig": "SG,SF",
+     "status": "O"
+    },
+    {
+     "slot": "BN",
+     "name": "Collin Gillespie",
+     "nba": "PHX",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Jalen Suggs",
+     "nba": "ORL",
+     "elig": "PG,SG",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Coby White",
+     "nba": "CHA",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "IL",
+     "name": "Ivica Zubac",
+     "nba": "IND",
+     "elig": "C",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "name": "BUCKETSSS",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Ja'Kobe Walter",
+     "nba": "TOR",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "Jaylen Brown",
+     "nba": "PHI",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Jalen Green",
+     "nba": "PHX",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "DeMar DeRozan",
+     "nba": "DEN",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "LeBron James",
+     "nba": "PHI",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Norman Powell",
+     "nba": "CHI",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Victor Wembanyama",
+     "nba": "SAS",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Joel Embiid",
+     "nba": "PHI",
+     "elig": "C",
+     "status": "Q"
+    },
+    {
+     "slot": "Util",
+     "name": "Desmond Bane",
+     "nba": "ORL",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "James Harden",
+     "nba": "CLE",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Damian Lillard",
+     "nba": "POR",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Domantas Sabonis",
+     "nba": "SAC",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Kevin Porter Jr.",
+     "nba": "MIL",
+     "elig": "PG,SG",
+     "status": "NA"
+    },
+    {
+     "slot": "IL",
+     "name": "Ja Morant",
+     "nba": "POR",
+     "elig": "PG",
+     "status": "O"
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "name": "MoneyMakinBush58",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Stephen Curry",
+     "nba": "GSW",
+     "elig": "PG",
+     "status": "O"
+    },
+    {
+     "slot": "SG",
+     "name": "Ayo Dosunmu",
+     "nba": "MIN",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Cooper Flagg",
+     "nba": "DAL",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Paul George",
+     "nba": "BOS",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Jalen Johnson",
+     "nba": "ATL",
+     "elig": "SF,PF",
+     "status": "Q"
+    },
+    {
+     "slot": "F",
+     "name": "Evan Mobley",
+     "nba": "CLE",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Jarrett Allen",
+     "nba": "CLE",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Wendell Carter Jr.",
+     "nba": "ORL",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Tyler Herro",
+     "nba": "MIL",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "AJ Dybantsa",
+     "nba": "WAS",
+     "elig": "SF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Keyonte George",
+     "nba": "UTA",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Zach LaVine",
+     "nba": "SAC",
+     "elig": "PG,SG,SF",
+     "status": "Q"
+    },
+    {
+     "slot": "BN",
+     "name": "Aaron Gordon",
+     "nba": "DEN",
+     "elig": "PF,C",
+     "status": ""
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "name": "CLAMP GODZ",
+   "players": [
+    {
+     "slot": "PG",
+     "name": "Andrew Nembhard",
+     "nba": "IND",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "SG",
+     "name": "Ty Jerome",
+     "nba": "MEM",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "G",
+     "name": "Darius Acuff Jr.",
+     "nba": "SAC",
+     "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "SF",
+     "name": "Franz Wagner",
+     "nba": "ORL",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "PF",
+     "name": "Kevin Durant",
+     "nba": "HOU",
+     "elig": "SG,SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "F",
+     "name": "Cameron Boozer",
+     "nba": "MEM",
+     "elig": "PF",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Zach Edey",
+     "nba": "MEM",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Aday Mara",
+     "nba": "OKC",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Derrick White",
+     "nba": "BOS",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Rui Hachimura",
+     "nba": "LAC",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Amen Thompson",
+     "nba": "HOU",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Cedric Coward",
+     "nba": "MEM",
+     "elig": "SG,SF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Cade Cunningham",
+     "nba": "DET",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "IL",
+     "name": "Chet Holmgren",
+     "nba": "OKC",
+     "elig": "PF,C",
+     "status": "O"
+    },
+    {
+     "slot": "IL",
+     "name": "Nic Claxton",
+     "nba": "CHI",
+     "elig": "C",
+     "status": "O"
+    }
+   ]
+  }
+ ]
+}

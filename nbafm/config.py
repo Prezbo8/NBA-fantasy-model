@@ -2,15 +2,21 @@
 
 LEAGUE_ID = "108458"  # Yahoo "NBA 2027"
 
-# Yahoo's default H2H points weights. Used until the Yahoo API works; after that the
-# league's own stat_modifiers replace these (yahoo.py -> build.py).
+# League scoring, copied from the league's Scoring & Settings page (Nov 1 2026).
+# Once the Yahoo API works, its stat_modifiers replace these (yahoo.py -> build.py).
+# DD/TD are derived per game in model.fantasy_points (a triple-double scores both).
 DEFAULT_SCORING = {
-    "PTS": 1.0,
-    "REB": 1.2,
-    "AST": 1.5,
+    "FTM": 1.0,
+    "3PTM": 3.0,
+    "PTS": 0.5,
+    "OREB": 2.0,
+    "DREB": 1.0,
+    "AST": 2.0,
     "STL": 3.0,
     "BLK": 3.0,
-    "TO": -1.0,
+    "TO": -2.0,
+    "DD": 5.0,
+    "TD": 7.0,
 }
 
 # Projected FP/game = weighted blend of these windows (weights renormalize over windows
@@ -21,6 +27,5 @@ BLEND = {"season": 0.5, "l14": 0.3, "l7": 0.2}
 # so one hot night doesn't top the rankings: proj = (n*fp + K*repl) / (n + K).
 SHRINK_GAMES = 1
 
-# Replacement level = FP/game of the Nth best player (roughly teams x roster spots, e.g.
-# 12 x 13 = 156). Replaced by the real number once Yahoo league settings load.
-REPLACEMENT_RANK = 150
+# Replacement level = FP/game of the Nth best player: 10 teams x 13 non-IL roster spots.
+REPLACEMENT_RANK = 130
