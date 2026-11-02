@@ -101,7 +101,8 @@
     </div>
     <div class="card"><table id="rkTable"></table></div>
     <div class="note">Proj = blend of season / last 14 days / last 7 days FP per game (50/30/20), nudged toward replacement level for tiny samples.
-      VORP = proj − replacement level. Week / next week / ROS = proj × games the player is available for.</div>
+      VORP = proj − replacement level. Week / next week / ROS = proj × games the player is available for.
+      <b>Last szn</b> = 2025-26 FP/G under this league's scoring. <b>Buy-low</b> = FP/G now minus last season; tagged BUY-LOW when a 35+ FP/G player is 5+ below last season with his minutes intact (a slump, not a lost role).</div>
   </section>
 
   <section id="schedule">
@@ -218,7 +219,10 @@ function renderRankings() {
     { k: "proj", label: "Proj" }, { k: "vorp", label: "VORP", fmt: p => trend(p.vorp) },
     { k: "wk_games", label: "Wk G", d: 0 }, { k: "wk_fp", label: "Wk FP", d: 0 },
     { k: "nw_games", label: "Next G", d: 0 }, { k: "nw_fp", label: "Next FP", d: 0 },
-    { k: "ros_fp", label: "ROS FP", d: 0 }, poCol,
+    { k: "ros_fp", label: "ROS FP", d: 0 },
+    { k: "last_fpg", label: "Last szn" }, { k: "vs_last", label: "Buy-low", l: true, fmt: p => p.vs_last == null ? "–"
+      : `${trend(p.vs_last)}${p.buy_low ? ' <b class="up" title="35+ FP/G last season, 5+ below it now, minutes within 3 of last season: likely a slump, not a decline">BUY-LOW</b>' : ""}` },
+    poCol,
   ], rows, rk, renderRankings);
 }
 

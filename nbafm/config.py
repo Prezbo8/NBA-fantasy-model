@@ -37,3 +37,7 @@ PLAYOFF_AVAIL = {"Top-2 seed": 0.83, "Seeds 3-6": 0.85, "Play-in": 0.84, "Lotter
 # Projected finish = current record + last season's win% counted as this many extra games
 PRIOR_GAMES = 20
 PRIOR_SEASON = 2026  # ESPN season year of last season (2025-26)
+
+# Buy-low flag: good last season, well below it now, but the role (minutes) is intact,
+# so it's more likely a slump than a decline. Last season = data/last_season.json.
+BUY_LOW = {"min_last_fpg": 35, "min_last_gp": 25, "gap": 5, "max_min_drop": 3}

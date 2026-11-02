@@ -5,7 +5,9 @@ from pathlib import Path
 
 from nbafm import config, espn, model, rosters, yahoo
 
-OUT = Path(__file__).resolve().parent / "docs" / "data.json"
+ROOT = Path(__file__).resolve().parent
+OUT = ROOT / "docs" / "data.json"
+LAST_SEASON = ROOT / "data" / "last_season.json"  # research/export_last_season.py
 
 
 def main():
@@ -23,6 +25,14 @@ def main():
 
     data = model.build(schedule, box, injuries, scoring, today, repl_rank)
     data["yahoo"] = lg is not None
+    last = json.loads(LAST_SEASON.read_text())
+    b = config.BUY_LOW
+    for p in data["players"]:
+        ls = last.get(p["id"])
+        p["last_fpg"] = ls["fpg"] if ls else None
+        p["vs_last"] = round(p["fp_season"] - ls["fpg"], 1) if ls else None
+        p["buy_low"] = bool(ls and ls["fpg"] >= b["min_last_fpg"] and ls["gp"] >= b["min_last_gp"]
+                            and p["vs_last"] <= -b["gap"] and p["min"] >= ls["min"] - b["max_min_drop"])
     risk = model.playoff_risk(espn.standings(), espn.standings(config.PRIOR_SEASON))
     data["playoff_risk"] = risk
     for p in data["players"]:
