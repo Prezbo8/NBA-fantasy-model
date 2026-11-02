@@ -31,6 +31,12 @@ def main():
         ls = last.get(p["id"])
         p["last_fpg"] = ls["fpg"] if ls else None
         p["vs_last"] = round(p["fp_season"] - ls["fpg"], 1) if ls else None
+        k = min(config.LAST_SEASON_GAMES, ls["gp"] / 2) if ls else 0
+        # last season's production per minute at this season's minutes: a slump keeps full
+        # credit, a smaller role (Giddey, Markkanen) gets proportionally less (ratio capped 0.5-1.25)
+        last_adj = ls["fpg"] * min(1.25, max(0.5, p["min"] / ls["min"])) if ls else None
+        p["proj_bl"] = round((p["gp"] * p["proj"] + k * last_adj) / (p["gp"] + k), 2) if ls else p["proj"]
+        p["ros_fp_bl"] = round(p["proj_bl"] * p["ros_games"], 1)
         p["buy_low"] = bool(ls and ls["fpg"] >= b["min_last_fpg"] and ls["gp"] >= b["min_last_gp"]
                             and p["vs_last"] <= -b["gap"] and p["min"] >= ls["min"] - b["max_min_drop"])
     risk = model.playoff_risk(espn.standings(), espn.standings(config.PRIOR_SEASON))

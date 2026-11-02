@@ -129,6 +129,9 @@
       <div class="card side"><h3>You get</h3><input list="playerList" id="tdGetIn" placeholder="Add player"><div class="chips" id="tdGet"></div></div>
     </div>
     <div class="card verdict" id="tdVerdict"></div>
+    <div class="note">Rest-of-season value blends this season with last season's FP/G (last season counts as up to 15 games), so a slow start doesn't decide a trade.
+      Early in the season last season carries most of the weight; by midseason this season does. “This season only” shows the unblended number.
+      Next week uses this season's projection only.</div>
   </section>
 
   <section id="waivers">
@@ -344,7 +347,7 @@ const td = { give: [], get: [] };
 function renderTrade() {
   for (const side of ["give", "get"]) {
     $(`#td${side === "give" ? "Give" : "Get"}`).innerHTML = td[side].map((p, i) =>
-      `<div class="chip"><span>${p.name} ${injBadge(p)} <span class="sub">${p.team} · ${fmt(p.proj)} proj · ${fmt(p.ros_fp, 0)} ROS</span></span><button data-side="${side}" data-i="${i}" aria-label="Remove">×</button></div>`).join("");
+      `<div class="chip"><span>${p.name} ${injBadge(p)} <span class="sub">${p.team} · ${fmt(p.proj_bl)} value/G${p.proj_bl !== p.proj ? ` (this season ${fmt(p.proj)}, last ${fmt(p.last_fpg)})` : ""} · ${fmt(p.ros_fp_bl, 0)} ROS</span></span><button data-side="${side}" data-i="${i}" aria-label="Remove">×</button></div>`).join("");
   }
   document.querySelectorAll(".chip button").forEach(b => b.onclick = () => { td[b.dataset.side].splice(+b.dataset.i, 1); renderTrade(); });
   const sum = (arr, k) => arr.reduce((s, p) => s + p[k], 0);
@@ -353,13 +356,15 @@ function renderTrade() {
   const ros = [...D.players].map(p => p.ros_games).sort((a, b) => a - b), medRos = ros[Math.floor(ros.length / 2)];
   const spots = td.give.length - td.get.length;  // >0: you free spots
   const fill = spots * D.replacement_fp * medRos;
-  const rosDiff = sum(td.get, "ros_fp") - sum(td.give, "ros_fp") + fill;
+  // Verdict uses ros_fp_bl (this season blended with last season, see config.LAST_SEASON_GAMES)
+  const rosDiff = sum(td.get, "ros_fp_bl") - sum(td.give, "ros_fp_bl") + fill;
+  const rosDiffNow = sum(td.get, "ros_fp") - sum(td.give, "ros_fp") + fill;
   const nwDiff = sum(td.get, "nw_fp") - sum(td.give, "nw_fp");
   const sign = (v) => `<span class="${v >= 0 ? "up" : "down"}">${v >= 0 ? "+" : ""}${v.toFixed(0)}</span>`;
   $("#tdVerdict").innerHTML = `
     <div class="sub">Rest-of-season FP change for you</div>
     <div class="big">${sign(rosDiff)} <span class="sub">(${rosDiff >= 0 ? "accept" : "decline"} on ROS value)</span></div>
-    <div class="sub" style="margin-top:6px">Next week: ${sign(nwDiff)} FP · ROS: get ${fmt(sum(td.get, "ros_fp"), 0)} vs give ${fmt(sum(td.give, "ros_fp"), 0)}
+    <div class="sub" style="margin-top:6px">Using this season only: ${sign(rosDiffNow)} · Next week: ${sign(nwDiff)} FP · ROS: get ${fmt(sum(td.get, "ros_fp_bl"), 0)} vs give ${fmt(sum(td.give, "ros_fp_bl"), 0)}
     ${spots ? ` · roster spots: ${spots > 0 ? "+" : ""}${spots} × replacement (${fmt(D.replacement_fp)} FP/G × ${medRos} G) = ${sign(fill)}` : ""}</div>`;
 }
 function addTrade(side, input) {

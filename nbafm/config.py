@@ -41,3 +41,8 @@ PRIOR_SEASON = 2026  # ESPN season year of last season (2025-26)
 # Buy-low flag: good last season, well below it now, but the role (minutes) is intact,
 # so it's more likely a slump than a decline. Last season = data/last_season.json.
 BUY_LOW = {"min_last_fpg": 35, "min_last_gp": 25, "gap": 5, "max_min_drop": 3}
+
+# Trade tab value: this season's projection blended with last season's FP/G, counting last
+# season as up to this many games (half its games played if fewer), so a 6-game slump
+# doesn't set a player's trade value. Fades as this season's sample grows.
+LAST_SEASON_GAMES = 15
