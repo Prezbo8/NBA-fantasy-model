@@ -48,6 +48,7 @@ def load(season):
             for s, keys in SOURCES.items():
                 p["src"][s] += sum(SC.get(k, 0) * ln.get(k, 0) for k in keys)
             p["name"] = ln["name"]
+            p["team"] = ln["team"]  # games are in date order, so this ends as his latest team
             p["pos"][pos_group(ln["pos"])] += 1
             p["gp"] += 1
             p["fp"] += fp

@@ -84,6 +84,21 @@ def box_score(game, cache_dir=GAMES_DIR):
     return lines
 
 
+def standings(season=None):
+    """{team: {conf, wins, losses, seed, clincher}}; season = year it ends, None = current."""
+    js = session.get("https://site.api.espn.com/apis/v2/sports/basketball/nba/standings",
+                     params={"season": season} if season else {}, timeout=30)
+    js.raise_for_status()
+    out = {}
+    for conf in js.json()["children"]:
+        for e in conf["standings"]["entries"]:
+            st = {x["name"]: x.get("displayValue") for x in e["stats"]}
+            out[e["team"]["abbreviation"]] = {"conf": conf["name"].split()[0], "wins": int(st["wins"]),
+                                              "losses": int(st["losses"]), "seed": int(st["playoffSeed"]),
+                                              "clincher": st.get("clincher") or ""}
+    return out
+
+
 def injuries():
     """{espn player id: {status, return_date, note}}"""
     out = {}

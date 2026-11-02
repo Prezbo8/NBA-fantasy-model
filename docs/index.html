@@ -160,7 +160,9 @@
   <section id="drop">
     <div class="card"><table id="drTable"></table></div>
     <div class="note">“Best FA” = the highest-projected free agent at a position this player is eligible for. Drop candidate = a free agent beats him by 2+ FP per game.
-      Players in IL slots aren't flagged, since they don't use a roster spot.</div>
+      Players in IL slots aren't flagged, since they don't use a roster spot.
+      <b>Playoffs</b> = where the player's NBA team is projected to finish (current record + last season) and how often players on such teams played during fantasy playoff weeks 20–22 over the last 3 seasons.
+      ⚠ Lottery players played only 71% of those games (vs 83–85% for everyone else); consider trading them before the deadline (Mar 4). This early, the projected finish can change a lot.</div>
   </section>
 </main>
 
@@ -189,6 +191,10 @@ function table(el, cols, rows, state, rerender) {
   });
 }
 
+// Fantasy-playoff availability flag (model.playoff_risk): lottery teams' stars played 71% of
+// fantasy-playoff games over the last 3 seasons vs 83-85% for everyone else.
+const poCol = { k: "po_avail", label: "Playoffs", l: true, fmt: p => !p.po_tier ? "–"
+  : `<span class="${p.po_tier === "Lottery" ? "down" : "sub"}" title="Team projected: ${p.po_tier}. Over the last 3 seasons, top-100 players on such teams played ${Math.round(p.po_avail * 100)}% of fantasy-playoff games.">${p.po_tier === "Lottery" ? "⚠ " : ""}${p.po_tier} ${Math.round(p.po_avail * 100)}%</span>` };
 const ownerName = (p) => p.owner == null ? '<span class="sub">FA</span>' : p.owner === D.league.my_team ? "<b>You</b>" : D.league.teams.find(t => t.id === p.owner).name;
 const isFA = (p) => p.owner == null;
 const myPlayers = () => D.players.filter(p => p.owner === D.league.my_team);
@@ -212,7 +218,7 @@ function renderRankings() {
     { k: "proj", label: "Proj" }, { k: "vorp", label: "VORP", fmt: p => trend(p.vorp) },
     { k: "wk_games", label: "Wk G", d: 0 }, { k: "wk_fp", label: "Wk FP", d: 0 },
     { k: "nw_games", label: "Next G", d: 0 }, { k: "nw_fp", label: "Next FP", d: 0 },
-    { k: "ros_fp", label: "ROS FP", d: 0 },
+    { k: "ros_fp", label: "ROS FP", d: 0 }, poCol,
   ], rows, rk, renderRankings);
 }
 
@@ -273,7 +279,7 @@ function renderWaivers() {
     nameCol, { k: "team", label: "Team", l: true, fmt: p => p.team }, { k: "pos", label: "Pos", l: true, fmt: p => p.pos },
     { k: "gp", label: "GP", d: 0 }, { k: "proj", label: "Proj" }, { k: "gain", label: "+FP/G vs drop", fmt: p => trend(p.gain) },
     { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) }, { k: "fp_l7", label: "L7" },
-    { k: "nw_games", label: "Next G", d: 0 }, { k: "nw_fp", label: "Next FP", d: 0 }, { k: "ros_fp", label: "ROS FP", d: 0 },
+    { k: "nw_games", label: "Next G", d: 0 }, { k: "nw_fp", label: "Next FP", d: 0 }, { k: "ros_fp", label: "ROS FP", d: 0 }, poCol,
   ], rows, wv, renderWaivers);
   $("#wvNote").innerHTML = `“+FP/G vs drop” compares each free agent with your lowest-projected active player, <b>${worst.name}</b> (${fmt(worst.proj)} FP/G). Positive = an upgrade per game; multiply by games left for the season-long gain.`;
 }
@@ -292,7 +298,7 @@ function renderDrop() {
   table($("#drTable"), [
     { k: "slot", label: "Slot", l: true, fmt: p => p.slot }, nameCol, { k: "elig", label: "Elig", l: true, fmt: p => p.elig },
     { k: "proj", label: "Proj" }, { k: "vorp", label: "VORP", fmt: p => trend(p.vorp) }, { k: "min_trend", label: "Min Δ L7", fmt: p => trend(p.min_trend) },
-    { k: "nw_games", label: "Next G", d: 0 }, { k: "ros_fp", label: "ROS FP", d: 0 },
+    { k: "nw_games", label: "Next G", d: 0 }, { k: "ros_fp", label: "ROS FP", d: 0 }, poCol,
     { k: "best", label: "Best FA", l: true, fmt: p => `${p.best} <span class="sub">${fmt(p.best_proj)}</span>` },
     { k: "edge", label: "FA edge", fmt: p => p.slot === "IL" ? "–" : trend(p.edge) },
     { k: "verdict", label: "Verdict", l: true, fmt: p => p.verdict === "DROP candidate" ? `<b class="down">${p.verdict}</b>` : p.verdict },

@@ -23,6 +23,11 @@ def main():
 
     data = model.build(schedule, box, injuries, scoring, today, repl_rank)
     data["yahoo"] = lg is not None
+    risk = model.playoff_risk(espn.standings(), espn.standings(config.PRIOR_SEASON))
+    data["playoff_risk"] = risk
+    for p in data["players"]:
+        r = risk.get(p["team"])
+        p["po_tier"], p["po_avail"] = (r["tier"], r["avail"]) if r else (None, None)
     data["league"] = rosters.load(data["players"])
     if data["league"]:
         data["league"]["power"] = model.power_rankings(data["league"], data["players"], data["horizon"][7:], today)

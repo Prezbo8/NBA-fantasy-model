@@ -149,3 +149,21 @@ def power_rankings(league, players, next_week, today):
             "unmatched": t["unmatched"],
         })
     return sorted(out, key=lambda t: -t["ros_wk"])
+
+
+def playoff_risk(current, prior):
+    """{team: {tier, avail, proj_seed, record}}: projected finish -> historical playoff-week
+    availability (config.PLAYOFF_AVAIL). current/prior = espn.standings() outputs."""
+    k = config.PRIOR_GAMES
+    proj = {}
+    for t, s in current.items():
+        p = prior.get(t)
+        prior_pct = p["wins"] / (p["wins"] + p["losses"]) if p else 0.5
+        proj[t] = (s["wins"] + k * prior_pct) / (s["wins"] + s["losses"] + k)
+    out = {}
+    for t, s in current.items():
+        seed = 1 + sum(proj[o] > proj[t] for o in current if current[o]["conf"] == s["conf"] and o != t)
+        tier = "Top-2 seed" if seed <= 2 else "Seeds 3-6" if seed <= 6 else "Play-in" if seed <= 10 else "Lottery"
+        out[t] = {"tier": tier, "avail": config.PLAYOFF_AVAIL[tier], "proj_seed": seed,
+                  "record": f"{s['wins']}-{s['losses']}", "conf": s["conf"]}
+    return out

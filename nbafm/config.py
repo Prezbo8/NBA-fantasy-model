@@ -29,3 +29,11 @@ SHRINK_GAMES = 1
 
 # Replacement level = FP/game of the Nth best player: 10 teams x 13 non-IL roster spots.
 REPLACEMENT_RANK = 130
+
+# Fantasy-playoff (weeks 20-22) risk. Share of team games top-100 players played during the
+# fantasy playoffs, 2023-24 to 2025-26, by where their team finished (research/, Nov 2026).
+# Before the window everyone played ~91-95%.
+PLAYOFF_AVAIL = {"Top-2 seed": 0.83, "Seeds 3-6": 0.85, "Play-in": 0.84, "Lottery": 0.71}
+# Projected finish = current record + last season's win% counted as this many extra games
+PRIOR_GAMES = 20
+PRIOR_SEASON = 2026  # ESPN season year of last season (2025-26)
