@@ -1,13 +1,16 @@
 name: Daily NBA fantasy build
 
-# Twice a day: early morning (overnight box scores) and late afternoon (pre-game injury news).
-# UTC 11:17 / 22:17 = 6:17a / 5:17p EST (7:17a / 6:17p EDT). Not on the hour: GitHub
-# drops/delays top-of-hour scheduled runs under load.
+# Triggered by an external pinger (cron-job.org, America/New_York time) through the
+# workflow_dispatch API, because GitHub's own schedule started runs 5-9 hours late:
+#   slot=always   12:01 AM, and hourly 11:17 AM - 10:17 PM
+#   slot=pregame  :15 and :45, 11 AM - 10 PM; builds only if a game tips off within
+#                 30 min (pregame.py), i.e. ~15 min before each tip-off
 on:
-  schedule:
-    - cron: "17 11 * * *"
-    - cron: "17 22 * * *"
   workflow_dispatch:
+    inputs:
+      slot:
+        description: "always = build now; pregame = build only if a game tips off soon"
+        default: always
 
 permissions:
   contents: write
@@ -29,12 +32,19 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: main
+      - id: gate
+        if: inputs.slot == 'pregame'
+        run: python3 pregame.py
       - uses: actions/setup-python@v7
+        if: inputs.slot != 'pregame' || steps.gate.outputs.run == 'true'
         with:
           python-version: "3.14"
-      - run: pip install -r requirements.txt
-      - run: python build.py
+      - if: inputs.slot != 'pregame' || steps.gate.outputs.run == 'true'
+        run: pip install -r requirements.txt
+      - if: inputs.slot != 'pregame' || steps.gate.outputs.run == 'true'
+        run: python build.py
       - name: Commit data
+        if: inputs.slot != 'pregame' || steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
