@@ -1,6 +1,6 @@
 {
  "source": "yahoo league pages (browser)",
- "as_of": "2026-11-01",
+ "as_of": "2026-11-06",
  "my_team": 4,
  "teams": [
   {
@@ -126,13 +126,6 @@
      "status": ""
     },
     {
-     "slot": "SG",
-     "name": "Keaton Wagler",
-     "nba": "LAC",
-     "elig": "SG",
-     "status": ""
-    },
-    {
      "slot": "G",
      "name": "Kyrie Irving",
      "nba": "DAL",
@@ -176,13 +169,6 @@
     },
     {
      "slot": "Util",
-     "name": "Terrence Shannon Jr.",
-     "nba": "MIN",
-     "elig": "SG,SF",
-     "status": ""
-    },
-    {
-     "slot": "Util",
      "name": "Michael Porter Jr.",
      "nba": "BKN",
      "elig": "SF,PF",
@@ -215,6 +201,20 @@
      "nba": "UTA",
      "elig": "PF,C",
      "status": "O"
+    },
+    {
+     "slot": "F",
+     "name": "Saddiq Bey",
+     "nba": "NOP",
+     "elig": "SF,PF",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Duncan Robinson",
+     "nba": "DET",
+     "elig": "SG,SF",
+     "status": ""
     }
    ]
   },
@@ -255,13 +255,6 @@
      "name": "RJ Barrett",
      "nba": "TOR",
      "elig": "SG,SF,PF",
-     "status": ""
-    },
-    {
-     "slot": "F",
-     "name": "Dillon Brooks",
-     "nba": "PHX",
-     "elig": "SF,PF",
      "status": ""
     },
     {
@@ -319,6 +312,13 @@
      "nba": "DET",
      "elig": "C",
      "status": "O"
+    },
+    {
+     "slot": "F",
+     "name": "Devin Vassell",
+     "nba": "SAS",
+     "elig": "SG,SF",
+     "status": ""
     }
    ]
   },
@@ -390,13 +390,6 @@
      "status": ""
     },
     {
-     "slot": "Util",
-     "name": "Tari Eason",
-     "nba": "HOU",
-     "elig": "SG,SF,PF",
-     "status": ""
-    },
-    {
      "slot": "BN",
      "name": "Jaime Jaquez Jr.",
      "nba": "MIL",
@@ -430,6 +423,13 @@
      "nba": "ORL",
      "elig": "PF",
      "status": "O"
+    },
+    {
+     "slot": "C",
+     "name": "Luka Garza",
+     "nba": "BOS",
+     "elig": "C",
+     "status": ""
     }
    ]
   },
@@ -501,13 +501,6 @@
      "status": ""
     },
     {
-     "slot": "Util",
-     "name": "Kyle Kuzma",
-     "nba": "MIL",
-     "elig": "SF,PF",
-     "status": ""
-    },
-    {
      "slot": "BN",
      "name": "Dejounte Murray",
      "nba": "NOP",
@@ -526,6 +519,13 @@
      "name": "Trae Young",
      "nba": "WAS",
      "elig": "PG",
+     "status": ""
+    },
+    {
+     "slot": "BN",
+     "name": "Keaton Wagler",
+     "nba": "LAC",
+     "elig": "SG",
      "status": ""
     }
    ]
@@ -605,27 +605,6 @@
      "status": ""
     },
     {
-     "slot": "BN",
-     "name": "Daniss Jenkins",
-     "nba": "DET",
-     "elig": "PG,SG",
-     "status": ""
-    },
-    {
-     "slot": "BN",
-     "name": "Draymond Green",
-     "nba": "GSW",
-     "elig": "PF,C",
-     "status": "O"
-    },
-    {
-     "slot": "IL",
-     "name": "Alex Caruso",
-     "nba": "OKC",
-     "elig": "SG,SF",
-     "status": "O"
-    },
-    {
      "slot": "IL",
      "name": "Kawhi Leonard",
      "nba": "TOR",
@@ -638,6 +617,27 @@
      "nba": "OKC",
      "elig": "SF,PF",
      "status": "O"
+    },
+    {
+     "slot": "C",
+     "name": "Daniel Gafford",
+     "nba": "DAL",
+     "elig": "C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Derik Queen",
+     "nba": "NOP",
+     "elig": "PF,C",
+     "status": ""
+    },
+    {
+     "slot": "Util",
+     "name": "Aaron Wiggins",
+     "nba": "ATL",
+     "elig": "SG,SF",
+     "status": ""
     }
    ]
   },
@@ -742,6 +742,13 @@
      "nba": "IND",
      "elig": "C",
      "status": "O"
+    },
+    {
+     "slot": "Util",
+     "name": "Myles Turner",
+     "nba": "MIL",
+     "elig": "C",
+     "status": ""
     }
    ]
   },
@@ -994,13 +1001,6 @@
     },
     {
      "slot": "C",
-     "name": "Zach Edey",
-     "nba": "MEM",
-     "elig": "C",
-     "status": ""
-    },
-    {
-     "slot": "C",
      "name": "Aday Mara",
      "nba": "OKC",
      "elig": "C",
@@ -1011,13 +1011,6 @@
      "name": "Derrick White",
      "nba": "BOS",
      "elig": "PG,SG",
-     "status": ""
-    },
-    {
-     "slot": "Util",
-     "name": "Rui Hachimura",
-     "nba": "LAC",
-     "elig": "SF,PF",
      "status": ""
     },
     {
@@ -1054,13 +1047,27 @@
      "nba": "CHI",
      "elig": "C",
      "status": "O"
+    },
+    {
+     "slot": "SG",
+     "name": "Jared McCain",
+     "nba": "OKC",
+     "elig": "PG,SG",
+     "status": ""
+    },
+    {
+     "slot": "C",
+     "name": "Neemias Queta",
+     "nba": "BOS",
+     "elig": "C",
+     "status": ""
     }
    ]
   }
  ],
  "adds": {
-  "used": 7,
+  "used": 2,
   "max": 7,
-  "week_of": "2026-10-26"
+  "week_of": "2026-11-02"
  }
 }
